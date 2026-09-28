@@ -67,6 +67,12 @@
   cursor: pointer;
 }
 
+.select:focus,
+.select:focus-visible {
+  outline: none;
+  box-shadow: none;
+}
+
 .select:disabled {
   cursor: not-allowed;
 }

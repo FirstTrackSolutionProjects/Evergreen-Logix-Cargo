@@ -177,6 +177,15 @@ h6 {
   border-radius: var(--radius-xs);
 }
 
+/* Inputs, textareas, and selects manage their own focus ring via their
+   wrapper's :focus-within state — suppress the browser's native outline
+   to avoid a double green ring. */
+input:focus-visible,
+textarea:focus-visible,
+select:focus-visible {
+  outline: none;
+}
+
 /* ============================================================
    Animations
    ============================================================ */

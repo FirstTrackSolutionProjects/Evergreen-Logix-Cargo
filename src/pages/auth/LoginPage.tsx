@@ -95,6 +95,7 @@ export function LoginPage() {
               leftIcon={<Lock size={16} />}
               error={errors.password?.message}
               requiredMark
+              togglePassword
               {...register('password')}
             />
 

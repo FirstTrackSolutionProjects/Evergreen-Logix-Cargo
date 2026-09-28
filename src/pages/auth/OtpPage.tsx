@@ -133,6 +133,7 @@ export function OtpPage() {
             autoComplete="new-password"
             error={errors.newPassword?.message}
             requiredMark
+            togglePassword
             {...register('newPassword')}
           />
 
@@ -143,6 +144,7 @@ export function OtpPage() {
             autoComplete="new-password"
             error={errors.confirmNewPassword?.message}
             requiredMark
+            togglePassword
             {...register('confirmNewPassword')}
           />
 

@@ -78,6 +78,7 @@ export function ChangePasswordModal({ isOpen, onClose }: ChangePasswordModalProp
           autoComplete="current-password"
           error={errors.oldPassword?.message}
           requiredMark
+          togglePassword
           {...register('oldPassword')}
         />
         <Input
@@ -86,6 +87,7 @@ export function ChangePasswordModal({ isOpen, onClose }: ChangePasswordModalProp
           autoComplete="new-password"
           error={errors.newPassword?.message}
           requiredMark
+          togglePassword
           {...register('newPassword')}
         />
         <Input
@@ -94,6 +96,7 @@ export function ChangePasswordModal({ isOpen, onClose }: ChangePasswordModalProp
           autoComplete="new-password"
           error={errors.confirmNewPassword?.message}
           requiredMark
+          togglePassword
           {...register('confirmNewPassword')}
         />
       </form>

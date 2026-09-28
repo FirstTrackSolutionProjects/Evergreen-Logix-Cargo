@@ -46,6 +46,10 @@
   color: var(--color-text-faint);
 }
 
+.textarea:focus-visible {
+  outline: none;
+}
+
 .error {
   border-color: var(--color-danger);
 }
