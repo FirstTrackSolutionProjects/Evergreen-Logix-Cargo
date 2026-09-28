@@ -14,6 +14,15 @@
   flex-wrap: wrap;
 }
 
+.searchGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+  flex: 1;
+  min-width: 0;
+}
+
 .statusTabs {
   display: flex;
   align-items: center;
@@ -109,6 +118,11 @@
 
 @media (max-width: 720px) {
   .filtersBar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .searchGroup {
     flex-direction: column;
     align-items: stretch;
   }
