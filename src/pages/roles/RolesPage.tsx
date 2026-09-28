@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
-import { Shield, Plus, Eye, Pencil, Trash2 } from 'lucide-react';
+import { Shield, Plus, Pencil, Trash2 } from 'lucide-react';
 import { rolesApi } from '@/api/roles.api';
 import { ROLE_SORTABLE } from '@/constants/sortables';
 import { PERMISSIONS } from '@/constants/permissions';

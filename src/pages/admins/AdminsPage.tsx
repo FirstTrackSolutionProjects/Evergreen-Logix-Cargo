@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Users, Plus, Eye, Pencil, Power, PowerOff, Shield } from 'lucide-react';
 import { adminsApi } from '@/api/admins.api';
 import { ADMIN_SORTABLE } from '@/constants/sortables';
