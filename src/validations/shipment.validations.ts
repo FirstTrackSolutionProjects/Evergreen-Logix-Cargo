@@ -60,7 +60,7 @@ export const createShipmentSchema = z
       .string({ error: 'Consignee name is required' })
       .trim()
       .min(2, 'Consignee name must be at least 2 characters long')
-      .max(100, 'Consignee name cannot be longer than 100 characters'),
+      .max(50, 'Consignee name cannot be longer than 50 characters'),
     consignee_phone: z
       .string({ error: 'Consignee phone is required' })
       .trim()
@@ -147,7 +147,8 @@ export const createShipmentSchema = z
     ewaybill: z
       .string()
       .trim()
-      .length(12, 'E-waybill must be 12 digits long')
+      .min(1, 'E-waybill cannot be empty')
+      .max(12, 'E-waybill cannot be longer than 12 characters')
       .regex(/^[0-9]{12}$/, 'E-waybill must be a 12 digit number')
       .or(z.literal('')),
   })
