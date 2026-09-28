@@ -1,6 +1,6 @@
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { Truck, Plus, Eye, Pencil, Power, PowerOff } from 'lucide-react';
 import { deliveryPartnersApi } from '@/api/delivery-partners.api';
 import { DELIVERY_PARTNER_SORTABLE } from '@/constants/sortables';
