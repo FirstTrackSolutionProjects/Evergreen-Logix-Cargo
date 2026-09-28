@@ -1,0 +1,119 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.filtersBar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border);
+  flex-wrap: wrap;
+}
+
+.statusTabs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  flex-wrap: wrap;
+  overflow-x: auto;
+  max-width: 100%;
+}
+
+.statusTab {
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  border-radius: var(--radius-full);
+  border: 1px solid transparent;
+  white-space: nowrap;
+  transition: all var(--transition);
+}
+
+.statusTab:hover {
+  background-color: var(--color-surface-2);
+  color: var(--color-text);
+}
+
+.statusTabActive {
+  background-color: var(--color-primary-subtle);
+  color: var(--color-primary-dark);
+  border-color: var(--color-success-border);
+}
+
+.tableWrapper {
+  padding: 0 4px;
+}
+
+.paginationWrapper {
+  padding: 12px 20px 16px;
+  border-top: 1px solid var(--color-border);
+}
+
+.idLink {
+  font-family: var(--font-mono);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--color-primary-dark);
+  letter-spacing: 0.3px;
+  transition: color var(--transition);
+}
+
+.idLink:hover {
+  color: var(--color-primary-darker);
+  text-decoration: underline;
+}
+
+.cellStack {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cellPrimary {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--color-text);
+}
+
+.cellSecondary {
+  font-size: 11.5px;
+  color: var(--color-text-muted);
+}
+
+.cellMuted {
+  font-size: 13px;
+  color: var(--color-text-muted);
+}
+
+.routeCell {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  color: var(--color-text);
+}
+
+.routeCity {
+  font-weight: 500;
+}
+
+.routeArrow {
+  color: var(--color-primary);
+  font-weight: 700;
+}
+
+@media (max-width: 720px) {
+  .filtersBar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .statusTabs {
+    padding-bottom: 4px;
+  }
+}

@@ -1,0 +1,18 @@
+export const ROUTES = {
+  LOGIN: '/login',
+  VERIFY_OTP: '/verify-otp',
+  DASHBOARD: '/',
+  SHIPMENTS: '/shipments',
+  SHIPMENT_CREATE: '/shipments/create',
+  SHIPMENT_DETAIL: (id: string | number) => `/shipments/${id}`,
+  SHIPMENT_EDIT: (id: string | number) => `/shipments/${id}/edit`,
+  BULK_SHIPMENTS: '/bulk-shipments',
+  DELIVERY_PARTNERS: '/delivery-partners',
+  DELIVERY_PARTNER_DETAIL: (id: string | number) => `/delivery-partners/${id}`,
+  ADMINS: '/admins',
+  ADMIN_DETAIL: (id: string | number) => `/admins/${id}`,
+  ROLES: '/roles',
+  ROLE_CREATE: '/roles/create',
+  ROLE_DETAIL: (id: string | number) => `/roles/${id}`,
+  PROFILE: '/profile',
+} as const;

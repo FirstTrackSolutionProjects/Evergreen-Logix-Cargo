@@ -1,0 +1,42 @@
+.page {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.filtersBar {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  padding: 16px 20px;
+  border-bottom: 1px solid var(--color-border);
+  flex-wrap: wrap;
+}
+
+.tableWrapper {
+  padding: 0 4px;
+}
+
+.paginationWrapper {
+  padding: 12px 20px 16px;
+  border-top: 1px solid var(--color-border);
+}
+
+.idMono {
+  font-family: var(--font-mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--color-text-muted);
+}
+
+.roleLink {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--color-primary-dark);
+  transition: color var(--transition);
+}
+
+.roleLink:hover {
+  color: var(--color-primary-darker);
+  text-decoration: underline;
+}
