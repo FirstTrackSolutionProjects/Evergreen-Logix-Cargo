@@ -2,7 +2,6 @@ import { useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Mail, Phone, Hash, User, Shield, Lock } from 'lucide-react';
 import { adminsApi } from '@/api/admins.api';
-import { rolesApi } from '@/api/roles.api';
 import { useAuth } from '@/context/useAuth';
 import { formatDateTime, formatFullName } from '@/utils/format';
 import { PageHeader } from '@/components/layout/PageHeader';
@@ -17,19 +16,9 @@ export function ProfilePage() {
   const { user } = useAuth();
   const [changePwOpen, setChangePwOpen] = useState(false);
 
-  const { data: rolesData } = useQuery({
-    queryKey: ['roles', 'all'],
-    queryFn: () => rolesApi.getAll({ page: 1, limit: 100, sort_by: 'id', sort_direction: 'asc' }),
-  });
-
-  const { data: myRoles } = useQuery({
-    queryKey: ['my-roles'],
-    queryFn: () => adminsApi.getMyRoles(),
-  });
-
-  const { data: myPermissions } = useQuery({
-    queryKey: ['my-permissions'],
-    queryFn: () => adminsApi.getMyPermissions(),
+  const { data: myProfile } = useQuery({
+    queryKey: ['my-profile'],
+    queryFn: () => adminsApi.getMyProfile(),
   });
 
   if (!user) {
@@ -43,11 +32,11 @@ export function ProfilePage() {
   const fullName = formatFullName(user.first_name, user.middle_name, user.last_name);
   const initials = `${user.first_name.charAt(0)}${user.last_name.charAt(0)}`.toUpperCase();
 
-  const roleTitles = (myRoles?.role_ids ?? [])
-    .map((rid) => rolesData?.data.rows.find((r) => r.id === rid)?.title)
+  const roleTitles = (myProfile?.roles ?? [])
+    .map((role) => role.title)
     .filter(Boolean) as string[];
 
-  const permissionCount = myPermissions?.permission_ids.length ?? 0;
+  // const permissionCount = myPermissions?.permission_ids.length ?? 0;
 
   return (
     <div className={styles.page}>
@@ -123,7 +112,7 @@ export function ProfilePage() {
         )}
       </Card>
 
-      <Card>
+      {/* <Card>
         <CardHeader
           title="Permissions"
           subtitle={
@@ -143,7 +132,7 @@ export function ProfilePage() {
             ))}
           </div>
         )}
-      </Card>
+      </Card> */}
 
       <ChangePasswordModal isOpen={changePwOpen} onClose={() => setChangePwOpen(false)} />
     </div>

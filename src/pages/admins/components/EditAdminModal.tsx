@@ -28,7 +28,7 @@ export function EditAdminModal({ admin, onClose }: EditAdminModalProps) {
     enabled: Boolean(admin),
   });
 
-  const { data: detail } = useQuery({
+  const { data: detail, isLoading: detailLoading } = useQuery({
     queryKey: ['admin', admin?.id],
     queryFn: () => adminsApi.getById(admin!.id),
     enabled: Boolean(admin),
@@ -57,6 +57,12 @@ export function EditAdminModal({ admin, onClose }: EditAdminModalProps) {
       });
     }
   }, [admin, reset]);
+
+  useEffect(() => {
+    if (admin && detail?.id === admin.id) {
+      setValue('role_ids', detail.role_ids ?? []);
+    }
+  }, [admin?.id, detail, setValue]);
 
   const selectedRoles = watch('role_ids') ?? [];
 
@@ -114,7 +120,7 @@ export function EditAdminModal({ admin, onClose }: EditAdminModalProps) {
         <div>
           <div className={styles.sectionLabel}>Roles</div>
           <div className={styles.rolesGrid}>
-            {rolesLoading ? (
+            {rolesLoading || detailLoading ? (
               <div className={styles.rolesEmpty}>
                 <Spinner size="sm" />
               </div>
@@ -122,7 +128,7 @@ export function EditAdminModal({ admin, onClose }: EditAdminModalProps) {
               <div className={styles.rolesEmpty}>No roles available.</div>
             ) : (
               rolesData?.data.rows.map((role) => {
-                const checked = (detail?.role_ids ?? []).includes(role.id) || selectedRoles.includes(role.id);
+                const checked = selectedRoles.includes(role.id);
                 return (
                   <label key={role.id} className={`${styles.roleRow} ${checked ? styles.roleRowChecked : ''}`}>
                     <input

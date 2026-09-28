@@ -1,4 +1,4 @@
-import { useQuery } from '@tanstack/react-query';
+giimport { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate, useParams } from 'react-router-dom';
 import {
   ArrowLeft,

@@ -1,5 +1,6 @@
 import { apiClient } from './client';
 import type { BaseResponse, DataResponse, PaginatedResponse } from '@/types/api.types';
+import type { Role } from '@/types/role.types';
 import type {
   Admin,
   AdminDetail,
@@ -45,8 +46,8 @@ export const adminsApi = {
     return data;
   },
 
-  getMyProfile: async (): Promise<Admin> => {
-    const { data } = await apiClient.get<DataResponse<Admin>>('/admin/admins/me/profile');
+  getMyProfile: async () => {
+    const { data } = await apiClient.get<DataResponse<{admin: Admin, roles: Role[]}>>('/admin/admins/me/profile');
     return data.data;
   },
 

@@ -38,7 +38,7 @@ export function AuthProvider({ children }: AuthProviderProps) {
       adminsApi.getMyProfile(),
       adminsApi.getMyPermissions(),
     ]);
-    setUser(profile);
+    setUser(profile.admin);
     setPermissions(permissionsResponse.permission_ids);
   }, []);
 
