@@ -11,180 +11,462 @@ const pincodeRegex = /^[0-9]{6}$/;
 
 const excelRowSchema = z
   .object({
-    // Consignor
+    // ── Consignor (Sender) details ──────────────────────────────────────────
     consignor_name: z
-      .string({ error: 'Consignor name is required' })
+      .string({
+        error: (issue) => {
+          if (issue.input === undefined) return 'Consignor name is required';
+          if (issue.code === 'invalid_type') return 'Consignor name must be a string';
+          return 'Invalid consignor name';
+        },
+      })
       .trim()
       .min(3, 'Consignor name must be at least 3 characters long')
       .max(100, 'Consignor name must be at most 100 characters long')
       .regex(/^[a-zA-Z ]+$/, 'Consignor name can only have alphabets and spaces'),
+
     consignor_phone: z
-      .string({ error: 'Consignor phone is required' })
+      .string({
+        error: (issue) => {
+          if (issue.input === undefined) return 'Consignor phone is required';
+          if (issue.code === 'invalid_type') return 'Consignor phone must be a string';
+          return 'Invalid consignor phone';
+        },
+      })
       .trim()
       .length(10, 'Consignor phone must be 10 digits long')
       .regex(
         phoneRegex,
         'Consignor phone must be a valid Indian phone number starting with 6, 7, 8, or 9',
       ),
+
     consignor_email: z
-      .string({ error: 'Consignor email is required' })
+      .string({
+        error: (issue) => {
+          if (issue.input === undefined) return 'Consignor email is required';
+          if (issue.code === 'invalid_type') return 'Consignor email must be a string';
+          return 'Invalid consignor email';
+        },
+      })
       .trim()
       .max(250, 'Consignor email cannot be longer than 250 characters')
-      .email('Please provide a valid consignor email address'),
+      .check(
+        z.email({
+          error: (issue) => {
+            if (issue.code === 'invalid_format') {
+              return 'Please provide a valid consignor email address';
+            }
+          },
+        }),
+      ),
+
     consignor_address: z
-      .string({ error: 'Consignor address is required' })
+      .string({
+        error: (issue) => {
+          if (issue.input === undefined) return 'Consignor address is required';
+          if (issue.code === 'invalid_type') return 'Consignor address must be a string';
+          return 'Invalid consignor address';
+        },
+      })
       .trim()
       .min(10, 'Consignor address must be at least 10 characters long')
       .max(200, 'Consignor address cannot be longer than 200 characters'),
+
     consignor_pincode: z
-      .string({ error: 'Consignor pincode is required' })
+      .string({
+        error: (issue) => {
+          if (issue.input === undefined) return 'Consignor pincode is required';
+          if (issue.code === 'invalid_type') return 'Consignor pincode must be a string';
+          return 'Invalid consignor pincode';
+        },
+      })
       .length(6, 'Consignor pincode must be 6 digits long')
       .regex(pincodeRegex, 'Consignor pincode must be a 6 digit number'),
+
     consignor_city: z
-      .string({ error: 'Consignor city is required' })
+      .string({
+        error: (issue) => {
+          if (issue.input === undefined) return 'Consignor city is required';
+          if (issue.code === 'invalid_type') return 'Consignor city must be a string';
+          return 'Invalid consignor city';
+        },
+      })
       .trim()
       .min(2, 'Consignor city must be at least 2 characters long')
       .max(50, 'Consignor city cannot be longer than 50 characters'),
+
     consignor_state: z
-      .string({ error: 'Consignor state is required' })
+      .string({
+        error: (issue) => {
+          if (issue.input === undefined) return 'Consignor state is required';
+          if (issue.code === 'invalid_type') return 'Consignor state must be a string';
+          return 'Invalid consignor state';
+        },
+      })
       .trim()
       .min(2, 'Consignor state must be at least 2 characters long')
       .max(50, 'Consignor state cannot be longer than 50 characters'),
-    consignor_country: z
-      .string({ error: 'Consignor country is required' })
-      .trim()
-      .pipe(z.enum(Object.values(COUNTRY), { error: 'Invalid consignor country' })),
 
-    // Return address
+    consignor_country: z
+      .string({
+        error: (issue) => {
+          if (issue.input === undefined) return 'Consignor country is required';
+          if (issue.code === 'invalid_type') return 'Consignor country must be a string';
+          return 'Invalid consignor country';
+        },
+      })
+      .trim()
+      .pipe(
+        z.enum(Object.values(COUNTRY), {
+          error: (issue) => {
+            if (issue.code === 'invalid_value') {
+              return `Supported countries are: ${Object.values(COUNTRY).join(', ')}`;
+            }
+          },
+        }),
+      ),
+
+    // ── Return address details ──────────────────────────────────────────────
     return_address: z
-      .string()
+      .string({
+        error: (issue) => {
+          if (issue.input === undefined) return 'Return address is required';
+          if (issue.code === 'invalid_type') return 'Return address must be a string';
+          return 'Invalid return address';
+        },
+      })
       .trim()
       .min(10, 'Return address must be at least 10 characters long')
       .max(200, 'Return address cannot be longer than 200 characters')
       .or(z.literal('')),
+
     return_pincode: z
-      .string()
+      .string({
+        error: (issue) => {
+          if (issue.input === undefined) return 'Return pincode is required';
+          if (issue.code === 'invalid_type') return 'Return pincode must be a string';
+          return 'Invalid return pincode';
+        },
+      })
       .length(6, 'Return pincode must be 6 digits long')
       .regex(pincodeRegex, 'Return pincode must be a 6 digit number')
       .or(z.literal('')),
+
     return_city: z
-      .string()
+      .string({
+        error: (issue) => {
+          if (issue.input === undefined) return 'Return city is required';
+          if (issue.code === 'invalid_type') return 'Return city must be a string';
+          return 'Invalid return city';
+        },
+      })
       .trim()
       .min(2, 'Return city must be at least 2 characters long')
       .max(50, 'Return city cannot be longer than 50 characters')
       .or(z.literal('')),
+
     return_state: z
-      .string()
+      .string({
+        error: (issue) => {
+          if (issue.input === undefined) return 'Return state is required';
+          if (issue.code === 'invalid_type') return 'Return state must be a string';
+          return 'Invalid return state';
+        },
+      })
       .trim()
       .min(2, 'Return state must be at least 2 characters long')
       .max(50, 'Return state cannot be longer than 50 characters')
       .or(z.literal('')),
+
     return_country: z
-      .string()
+      .string({
+        error: (issue) => {
+          if (issue.input === undefined) return 'Return country is required';
+          if (issue.code === 'invalid_type') return 'Return country must be a string';
+          return 'Invalid return country';
+        },
+      })
       .trim()
-      .pipe(z.enum(Object.values(COUNTRY), { error: 'Invalid return country' }))
+      .pipe(
+        z.enum(Object.values(COUNTRY), {
+          error: (issue) => {
+            if (issue.code === 'invalid_value') {
+              return `Supported countries are: ${Object.values(COUNTRY).join(', ')}`;
+            }
+          },
+        }),
+      )
       .or(z.literal('')),
 
-    // Consignee
+    // ── Consignee (Receiver) details ────────────────────────────────────────
     consignee_name: z
-      .string({ error: 'Consignee name is required' })
+      .string({
+        error: (issue) => {
+          if (issue.input === undefined) return 'Consignee name is required';
+          if (issue.code === 'invalid_type') return 'Consignee name must be a string';
+          return 'Invalid consignee name';
+        },
+      })
       .trim()
       .min(2, 'Consignee name must be at least 2 characters long')
       .max(100, 'Consignee name cannot be longer than 100 characters'),
+
     consignee_phone: z
-      .string({ error: 'Consignee phone is required' })
+      .string({
+        error: (issue) => {
+          if (issue.input === undefined) return 'Consignee phone is required';
+          if (issue.code === 'invalid_type') return 'Consignee phone must be a string';
+          return 'Invalid consignee phone';
+        },
+      })
       .trim()
       .length(10, 'Consignee phone must be 10 digits long')
       .regex(
         phoneRegex,
         'Consignee phone must be a 10 digit number starting with 6, 7, 8, or 9',
       ),
+
     consignee_email: z
-      .string({ error: 'Consignee email is required' })
+      .string({
+        error: (issue) => {
+          if (issue.input === undefined) return 'Consignee email is required';
+          if (issue.code === 'invalid_type') return 'Consignee email must be a string';
+          return 'Invalid consignee email';
+        },
+      })
       .trim()
       .max(250, 'Consignee email cannot be longer than 250 characters')
-      .email('Please provide a valid consignee email address'),
+      .check(
+        z.email({
+          error: (issue) => {
+            if (issue.code === 'invalid_format') {
+              return 'Please provide a valid consignee email address';
+            }
+          },
+        }),
+      ),
+
     consignee_address: z
-      .string({ error: 'Consignee address is required' })
+      .string({
+        error: (issue) => {
+          if (issue.input === undefined) return 'Consignee address is required';
+          if (issue.code === 'invalid_type') return 'Consignee address must be a string';
+          return 'Invalid consignee address';
+        },
+      })
       .trim()
       .min(10, 'Consignee address must be at least 10 characters long')
       .max(200, 'Consignee address cannot be longer than 200 characters'),
+
     consignee_pincode: z
-      .string({ error: 'Consignee pincode is required' })
+      .string({
+        error: (issue) => {
+          if (issue.input === undefined) return 'Consignee pincode is required';
+          if (issue.code === 'invalid_type') return 'Consignee pincode must be a string';
+          return 'Invalid consignee pincode';
+        },
+      })
       .length(6, 'Consignee pincode must be 6 digits long')
       .regex(pincodeRegex, 'Consignee pincode must be a 6 digit number'),
+
     consignee_city: z
-      .string({ error: 'Consignee city is required' })
+      .string({
+        error: (issue) => {
+          if (issue.input === undefined) return 'Consignee city is required';
+          if (issue.code === 'invalid_type') return 'Consignee city must be a string';
+          return 'Invalid consignee city';
+        },
+      })
       .trim()
       .min(2, 'Consignee city must be at least 2 characters long')
       .max(50, 'Consignee city cannot be longer than 50 characters'),
+
     consignee_state: z
-      .string({ error: 'Consignee state is required' })
+      .string({
+        error: (issue) => {
+          if (issue.input === undefined) return 'Consignee state is required';
+          if (issue.code === 'invalid_type') return 'Consignee state must be a string';
+          return 'Invalid consignee state';
+        },
+      })
       .trim()
       .min(2, 'Consignee state must be at least 2 characters long')
       .max(50, 'Consignee state cannot be longer than 50 characters'),
+
     consignee_country: z
-      .string({ error: 'Consignee country is required' })
+      .string({
+        error: (issue) => {
+          if (issue.input === undefined) return 'Consignee country is required';
+          if (issue.code === 'invalid_type') return 'Consignee country must be a string';
+          return 'Invalid consignee country';
+        },
+      })
       .trim()
       .pipe(
-        z.enum(['India'], {
-          error: 'Only India is supported as consignee country',
+        z.enum([COUNTRY.INDIA], {
+          error: (issue) => {
+            if (issue.code === 'invalid_value') {
+              return 'Only India is supported as consignee country';
+            }
+          },
         }),
       ),
 
-    // Flags
+    // ── Flags ───────────────────────────────────────────────────────────────
     return_same_as_pickup: z.coerce.boolean({
-      error: 'Return same as pickup must be TRUE/FALSE or 1/0',
+      error: (issue) => {
+        if (issue.input === undefined) return 'Return same as pickup is required';
+        if (issue.code === 'invalid_type')
+          return 'Return same as pickup must be a boolean (TRUE/FALSE or 1/0)';
+        return 'Invalid return same as pickup';
+      },
     }),
 
-    // Shipment options
+    // ── Shipment options ────────────────────────────────────────────────────
     payment_mode: z
-      .string({ error: 'Payment mode is required' })
+      .string({
+        error: (issue) => {
+          if (issue.input === undefined) return 'Payment mode is required';
+          if (issue.code === 'invalid_type') return 'Payment mode must be a string';
+          return 'Invalid payment mode';
+        },
+      })
       .trim()
-      .pipe(z.enum(Object.values(PAYMENT_MODE), { error: 'Invalid payment mode' })),
-    shipping_mode: z
-      .string({ error: 'Shipping mode is required' })
-      .trim()
-      .pipe(z.enum(Object.values(SHIPPING_MODE), { error: 'Invalid shipping mode' })),
-    cod_amount: z.coerce.number({ error: 'COD amount is required' }),
+      .pipe(
+        z.enum(Object.values(PAYMENT_MODE), {
+          error: (issue) => {
+            if (issue.input === undefined) return 'Payment mode is required';
+            if (issue.code === 'invalid_value') {
+              return `Supported payment modes are: ${Object.values(PAYMENT_MODE).join(', ')}`;
+            }
+            return 'Invalid payment mode';
+          },
+        }),
+      ),
 
-    // Box
+    shipping_mode: z
+      .string({
+        error: (issue) => {
+          if (issue.input === undefined) return 'Shipping mode is required';
+          if (issue.code === 'invalid_type') return 'Shipping mode must be a string';
+          return 'Invalid shipping mode';
+        },
+      })
+      .trim()
+      .pipe(
+        z.enum(Object.values(SHIPPING_MODE), {
+          error: (issue) => {
+            if (issue.input === undefined) return 'Shipping mode is required';
+            if (issue.code === 'invalid_value') {
+              return `Supported shipping modes are: ${Object.values(SHIPPING_MODE).join(', ')}`;
+            }
+            return 'Invalid shipping mode';
+          },
+        }),
+      ),
+
+    cod_amount: z.coerce.number({
+      error: (issue) => {
+        if (issue.input === undefined) return 'COD amount is required';
+        if (issue.code === 'invalid_type') return 'COD amount must be a number';
+        return 'Invalid COD amount';
+      },
+    }),
+
+    // ── Box dimensions ──────────────────────────────────────────────────────
     box_length: z.coerce
-      .number({ error: 'Box length is required' })
+      .number({
+        error: (issue) => {
+          if (issue.input === undefined) return 'Box length is required';
+          if (issue.code === 'invalid_type') return 'Box length must be a number';
+          return 'Invalid box length';
+        },
+      })
       .int('Box length must be an integer')
       .positive('Box length must be greater than 0'),
+
     box_breadth: z.coerce
-      .number({ error: 'Box breadth is required' })
+      .number({
+        error: (issue) => {
+          if (issue.input === undefined) return 'Box breadth is required';
+          if (issue.code === 'invalid_type') return 'Box breadth must be a number';
+          return 'Invalid box breadth';
+        },
+      })
       .int('Box breadth must be an integer')
       .positive('Box breadth must be greater than 0'),
+
     box_height: z.coerce
-      .number({ error: 'Box height is required' })
+      .number({
+        error: (issue) => {
+          if (issue.input === undefined) return 'Box height is required';
+          if (issue.code === 'invalid_type') return 'Box height must be a number';
+          return 'Invalid box height';
+        },
+      })
       .int('Box height must be an integer')
       .positive('Box height must be greater than 0'),
-    box_weight: z.coerce.number({ error: 'Box weight is required' }),
+
+    box_weight: z.coerce.number({
+      error: (issue) => {
+        if (issue.input === undefined) return 'Box weight is required';
+        if (issue.code === 'invalid_type') return 'Box weight must be a number';
+        return 'Invalid box weight';
+      },
+    }),
+
     box_weight_unit: z
-      .string({ error: 'Box weight unit is required' })
+      .string({
+        error: (issue) => {
+          if (issue.input === undefined) return 'Box weight unit is required';
+          if (issue.code === 'invalid_type') return 'Box weight unit must be a string';
+          return 'Invalid box weight unit';
+        },
+      })
       .trim()
       .pipe(
         z.enum(Object.values(BOX_WEIGHT_UNIT), {
-          error: 'Invalid box weight unit',
+          error: (issue) => {
+            if (issue.code === 'invalid_value') {
+              return `Supported box weight units are: ${Object.values(BOX_WEIGHT_UNIT).join(', ')}`;
+            }
+          },
         }),
       ),
 
-    // Item
+    // ── Item details ────────────────────────────────────────────────────────
     item_description: z
-      .string({ error: 'Item description is required' })
+      .string({
+        error: (issue) => {
+          if (issue.input === undefined) return 'Item description is required';
+          if (issue.code === 'invalid_type') return 'Item description must be a string';
+          return 'Invalid item description';
+        },
+      })
       .trim()
       .min(1, 'Item description cannot be empty')
       .max(100, 'Item description cannot be longer than 100 characters'),
+
     shipment_value: z.coerce
-      .number({ error: 'Shipment value is required' })
+      .number({
+        error: (issue) => {
+          if (issue.input === undefined) return 'Shipment value is required';
+          if (issue.code === 'invalid_type') return 'Shipment value must be a number';
+          return 'Invalid shipment value';
+        },
+      })
       .positive('Shipment value must be greater than 0')
-      .refine((v) => Number.isInteger(v * 100), {
+      .refine((value) => Number.isInteger(value * 100), {
         message: 'Shipment value must have at most 2 decimal places',
       }),
+
     ewaybill: z
-      .string()
+      .string({
+        error: (issue) => {
+          if (issue.code === 'invalid_type') return 'E-waybill must be a string';
+          return 'Invalid E-waybill';
+        },
+      })
       .trim()
       .min(1, 'E-waybill cannot be empty')
       .max(12, 'E-waybill cannot be longer than 12 characters')
@@ -192,6 +474,7 @@ const excelRowSchema = z
       .or(z.literal('')),
   })
   .superRefine((data, ctx) => {
+    // COD amount
     if (data.payment_mode === PAYMENT_MODE.COD && data.cod_amount <= 0) {
       ctx.addIssue({
         code: 'custom',
@@ -207,6 +490,7 @@ const excelRowSchema = z
       });
     }
 
+    // E-waybill
     if (data.shipment_value >= 50000 && !data.ewaybill) {
       ctx.addIssue({
         code: 'custom',
@@ -215,6 +499,7 @@ const excelRowSchema = z
       });
     }
 
+    // Box weight precision
     if (
       data.box_weight_unit === BOX_WEIGHT_UNIT.GRAM &&
       !Number.isInteger(data.box_weight)
@@ -237,6 +522,7 @@ const excelRowSchema = z
       });
     }
 
+    // Return address (required when return_same_as_pickup is false)
     if (!data.return_same_as_pickup) {
       if (!data.return_address) {
         ctx.addIssue({
@@ -277,7 +563,13 @@ const excelRowSchema = z
   });
 
 export const validateExcelBulkShipmentsSchema = z
-  .array(excelRowSchema, { error: 'Excel data must be an array of rows' })
+  .array(excelRowSchema, {
+    error: (issue) => {
+      if (issue.input === undefined) return 'Excel data is required';
+      if (issue.code === 'invalid_type') return 'Excel data must be an array of rows';
+      return 'Invalid Excel data';
+    },
+  })
   .min(1, 'Excel file must contain at least one shipment row');
 
 export type ExcelRowBulkShipmentValues = z.infer<typeof excelRowSchema>;
