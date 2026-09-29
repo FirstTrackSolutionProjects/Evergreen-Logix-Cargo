@@ -156,7 +156,12 @@ export function BulkShipmentPage() {
               type="file"
               accept={ACCEPTED_TYPE}
               className={styles.hiddenInput}
-              onChange={(e) => void handleSelect(e.target.files?.[0] ?? null)}
+              onChange={(e) => {
+                const selected = e.target.files?.[0] ?? null;
+                void handleSelect(selected);
+                // Allow re-selecting the same file (browser suppresses change otherwise)
+                e.target.value = '';
+              }}
               disabled={isUploading || isValidating}
             />
 
