@@ -88,6 +88,37 @@
   text-align: center;
 }
 
+/* ============================================================
+   Selection support
+   ============================================================ */
+
+.checkboxCell {
+  width: 40px;
+  padding-left: 16px !important;
+  padding-right: 0 !important;
+}
+
+.checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--color-primary);
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.checkbox:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.rowSelected {
+  background-color: var(--color-primary-subtle);
+}
+
+.rowSelected:hover {
+  background-color: var(--color-primary-tint);
+}
+
 @media (max-width: 720px) {
   .th,
   .td {
