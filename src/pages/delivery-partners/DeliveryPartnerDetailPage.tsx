@@ -1,5 +1,5 @@
 import { useQuery } from '@tanstack/react-query';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { ArrowLeft, Mail, Phone, Hash, Calendar, Truck } from 'lucide-react';
 import { deliveryPartnersApi } from '@/api/delivery-partners.api';
 import { ROUTES } from '@/constants/routes';
