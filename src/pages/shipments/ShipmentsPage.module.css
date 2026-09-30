@@ -5,13 +5,17 @@
 }
 
 .filtersBar {
-  display: flex;
+  display: block;
   align-items: center;
   justify-content: space-between;
   gap: 16px;
   padding: 16px 20px;
   border-bottom: 1px solid var(--color-border);
   flex-wrap: wrap;
+}
+
+.filtersBar > * + * {
+  margin-top: 0.5rem; /* 8px */
 }
 
 .searchGroup {
