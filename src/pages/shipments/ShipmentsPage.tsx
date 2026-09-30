@@ -43,6 +43,7 @@ export function ShipmentsPage() {
 
   const { page, setPage } = usePagination(1, 10);
   const [identifier, setIdentifier] = useState('');
+  const [deliveryPartnerIdentifier, setDeliveryPartnerIdentifier] = useState('');
   const [status, setStatus] = useState<StatusFilter>('ALL');
   const [sortBy, setSortBy] = useState<string>(SHIPMENT_SORTABLE.ID);
   const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('desc');
@@ -54,6 +55,9 @@ export function ShipmentsPage() {
   // Bulk selection — persists across pagination because it lives here, not in DataTable
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [bulkAssignOpen, setBulkAssignOpen] = useState(false);
+  // The delivery partner filter is hidden on the MANIFESTED tab — no delivery
+  // partner can be assigned before manifestation, so the filter is meaningless there.
+  const showDeliveryPartnerFilter = status !== SHIPMENT_STATUS.MANIFESTED;
 
   const filters = useMemo(
     () => ({
@@ -61,10 +65,22 @@ export function ShipmentsPage() {
       limit: 10,
       identifier: identifier || undefined,
       status: status === 'ALL' ? undefined : status,
+      delivery_partner_identifier:
+        showDeliveryPartnerFilter && deliveryPartnerIdentifier
+          ? deliveryPartnerIdentifier
+          : undefined,
       sort_by: sortBy,
       sort_direction: sortDirection,
     }),
-    [page, identifier, status, sortBy, sortDirection],
+    [
+      page,
+      identifier,
+      status,
+      showDeliveryPartnerFilter,
+      deliveryPartnerIdentifier,
+      sortBy,
+      sortDirection,
+    ],
   );
 
   const { data, isLoading, isFetching } = useQuery({
@@ -84,6 +100,11 @@ export function ShipmentsPage() {
 
   const handleStatusChange = (next: StatusFilter) => {
     setStatus(next);
+    // Clear the delivery partner filter when switching to MANIFESTED, since the
+    // input is hidden there and a stale value would silently filter results.
+    if (next === SHIPMENT_STATUS.MANIFESTED) {
+      setDeliveryPartnerIdentifier('');
+    }
     setPage(1);
     setSelectedIds([]);
   };
@@ -99,6 +120,10 @@ export function ShipmentsPage() {
     !row.dp_first_name &&
     row.status !== SHIPMENT_STATUS.CANCELLED &&
     row.status !== SHIPMENT_STATUS.DELIVERED;
+  const handleDeliveryPartnerIdentifierChange = (value: string) => {
+    setDeliveryPartnerIdentifier(value);
+    setPage(1);
+  };
 
   const columns: Column<ShipmentWithDeliveryPartner>[] = [
     {
@@ -237,11 +262,20 @@ export function ShipmentsPage() {
 
       <Card padded={false}>
         <div className={styles.filtersBar}>
-          <SearchInput
-            value={identifier}
-            onChange={handleIdentifierChange}
-            placeholder="Search by EGC ID, consignee, consignor…"
-          />
+          <div className={styles.searchGroup}>
+            <SearchInput
+              value={identifier}
+              onChange={handleIdentifierChange}
+              placeholder="Search by EGC ID, consignee, consignor…"
+            />
+            {showDeliveryPartnerFilter && (
+              <SearchInput
+                value={deliveryPartnerIdentifier}
+                onChange={handleDeliveryPartnerIdentifierChange}
+                placeholder="Search by delivery partner…"
+              />
+            )}
+          </div>
           <div className={styles.statusTabs}>
             <button
               type="button"
@@ -279,14 +313,14 @@ export function ShipmentsPage() {
             emptyState={
               <EmptyState
                 icon={<Package size={24} />}
-                title={identifier || status !== 'ALL' ? 'No shipments match your filters' : 'No shipments yet'}
+                title={identifier || deliveryPartnerIdentifier || status !== 'ALL' ? 'No shipments match your filters' : 'No shipments yet'}
                 description={
-                  identifier || status !== 'ALL'
+                  identifier || deliveryPartnerIdentifier || status !== 'ALL'
                     ? 'Try adjusting your search or filters.'
                     : 'Create your first shipment to get started.'
                 }
                 action={
-                  canCreate && !identifier && status === 'ALL' ? (
+                  canCreate && !identifier && !deliveryPartnerIdentifier && status === 'ALL' ? (
                     <Link to={ROUTES.SHIPMENT_CREATE}>
                       <Button variant="primary" leftIcon={<Plus size={16} />}>
                         Create Shipment
