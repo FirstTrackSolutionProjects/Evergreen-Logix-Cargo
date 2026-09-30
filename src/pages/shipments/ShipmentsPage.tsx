@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
-import { Package, Plus, Eye, Pencil, XCircle, AlertTriangle, Truck } from 'lucide-react';
+import { Package, Plus, Eye, Pencil, XCircle, AlertTriangle, Truck, X } from 'lucide-react';
 import { shipmentsApi } from '@/api/shipments.api';
 import { SHIPMENT_STATUS_LIST, SHIPMENT_STATUS } from '@/constants/enums';
 import type { ShipmentStatus } from '@/constants/enums';
@@ -23,6 +23,7 @@ import { ActionMenu } from '@/components/ui/ActionMenu';
 import { Card } from '@/components/ui/Card';
 import { CancelShipmentDialog } from './components/CancelShipmentDialog';
 import { AssignDeliveryPartnerDialog } from './components/AssignDeliveryPartnerDialog';
+import { BulkAssignDeliveryPartnerDialog } from './components/BulkAssignDeliveryPartnerDialog';
 import { NdrActionDialog } from './components/NdrActionDialog';
 import type { ShipmentWithDeliveryPartner } from '@/types/shipment.types';
 import { cn } from '@/utils/cn';
@@ -51,6 +52,9 @@ export function ShipmentsPage() {
   const [assignTarget, setAssignTarget] = useState<ShipmentWithDeliveryPartner | null>(null);
   const [ndrTarget, setNdrTarget] = useState<ShipmentWithDeliveryPartner | null>(null);
 
+  // Bulk selection — persists across pagination because it lives here, not in DataTable
+  const [selectedIds, setSelectedIds] = useState<number[]>([]);
+  const [bulkAssignOpen, setBulkAssignOpen] = useState(false);
   // The delivery partner filter is hidden on the MANIFESTED tab — no delivery
   // partner can be assigned before manifestation, so the filter is meaningless there.
   const showDeliveryPartnerFilter = status !== SHIPMENT_STATUS.MANIFESTED;
@@ -102,13 +106,20 @@ export function ShipmentsPage() {
       setDeliveryPartnerIdentifier('');
     }
     setPage(1);
+    setSelectedIds([]);
   };
 
   const handleIdentifierChange = (value: string) => {
     setIdentifier(value);
     setPage(1);
+    setSelectedIds([]);
   };
 
+  // Only allow selecting shipments that don't already have a delivery partner
+  const isRowSelectable = (row: ShipmentWithDeliveryPartner) =>
+    !row.dp_first_name &&
+    row.status !== SHIPMENT_STATUS.CANCELLED &&
+    row.status !== SHIPMENT_STATUS.DELIVERED;
   const handleDeliveryPartnerIdentifierChange = (value: string) => {
     setDeliveryPartnerIdentifier(value);
     setPage(1);
@@ -295,6 +306,10 @@ export function ShipmentsPage() {
             sortBy={sortBy}
             sortDirection={sortDirection}
             onSort={handleSort}
+            selectable={canAssign}
+            selectedRowKeys={selectedIds}
+            onSelectionChange={(keys) => setSelectedIds(keys as number[])}
+            isRowSelectable={isRowSelectable}
             emptyState={
               <EmptyState
                 icon={<Package size={24} />}
@@ -331,6 +346,32 @@ export function ShipmentsPage() {
         )}
       </Card>
 
+      {canAssign && selectedIds.length > 0 && (
+        <div className={styles.bulkBar}>
+          <span className={styles.bulkBarText}>
+            <strong>{selectedIds.length}</strong> shipment{selectedIds.length > 1 ? 's' : ''} selected
+          </span>
+          <div className={styles.bulkBarActions}>
+            <Button
+              variant="ghost"
+              size="sm"
+              leftIcon={<X size={14} />}
+              onClick={() => setSelectedIds([])}
+            >
+              Clear
+            </Button>
+            <Button
+              variant="primary"
+              size="sm"
+              leftIcon={<Truck size={14} />}
+              onClick={() => setBulkAssignOpen(true)}
+            >
+              Assign Delivery Partner
+            </Button>
+          </div>
+        </div>
+      )}
+
       <CancelShipmentDialog
         shipment={cancelTarget}
         onClose={() => setCancelTarget(null)}
@@ -341,6 +382,16 @@ export function ShipmentsPage() {
         shipment={assignTarget}
         onClose={() => setAssignTarget(null)}
         onSuccess={() => setAssignTarget(null)}
+      />
+
+      <BulkAssignDeliveryPartnerDialog
+        isOpen={bulkAssignOpen}
+        shipmentIds={selectedIds}
+        onClose={() => setBulkAssignOpen(false)}
+        onSuccess={() => {
+          setSelectedIds([]);
+          setBulkAssignOpen(false);
+        }}
       />
 
       <NdrActionDialog
