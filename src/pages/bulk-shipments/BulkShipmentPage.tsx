@@ -6,6 +6,7 @@ import { bulkShipmentsApi, uploadToS3 } from '@/api/bulk-shipments.api';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Card, CardHeader } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
+import { downloadBulkShipmentTemplate } from '@/utils/excelTemplate';
 import styles from './BulkShipmentPage.module.css';
 
 const ACCEPTED_TYPE = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
@@ -217,7 +218,7 @@ export function BulkShipmentPage() {
           <Button
             variant="outline"
             leftIcon={<Download size={16} />}
-            onClick={() => toast.success('Template download will be available soon')}
+            onClick={downloadBulkShipmentTemplate}
             fullWidth
           >
             Download Template
