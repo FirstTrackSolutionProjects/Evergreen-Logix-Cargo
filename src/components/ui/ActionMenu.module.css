@@ -19,18 +19,28 @@
   color: var(--color-text);
 }
 
+/* Positioned via inline styles (fixed + top/left from JS).
+   Only visual styling lives here. */
 .menu {
-  position: absolute;
-  top: calc(100% + 4px);
-  right: 0;
   min-width: 170px;
+  max-height: calc(100vh - 16px);
+  overflow-y: auto;
   background-color: var(--color-surface);
   border: 1px solid var(--color-border);
   border-radius: var(--radius-md);
   box-shadow: var(--shadow-lg);
   padding: 4px;
-  z-index: 100;
+  z-index: 1100;
   animation: fadeIn var(--transition-fast) ease-out;
+}
+
+/* Slight transform origin tweak so the animation feels anchored */
+.menuDown {
+  transform-origin: top right;
+}
+
+.menuUp {
+  transform-origin: bottom right;
 }
 
 .item {

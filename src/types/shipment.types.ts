@@ -1,6 +1,6 @@
 import type { PaymentMode, ShippingMode, BoxWeightUnit, ShipmentStatus, NdrAction } from '@/constants/enums';
 
-export interface Shipment {
+export type Shipment = {
   id: number;
   generated_id: string;
   admin_id: number;
@@ -103,6 +103,41 @@ export interface CreateShipmentPayload {
   shipment_value: number;
   ewaybill?: string;
 }
+
+export type ShipmentLabelData = Pick<Shipment, 
+'generated_id' | 
+'consignee_name' | 
+'consignee_address' |
+'consignee_phone' |
+'consignee_pincode' |
+'consignee_city' |
+'consignee_state' |
+'consignee_country' |
+'consignor_name' |
+'consignor_address' |
+'consignor_phone' |
+'consignor_pincode' |
+'consignor_city' |
+'consignor_state' |
+'consignor_country' |
+'return_same_as_pickup' |
+'return_address' |
+'return_pincode' |
+'return_city' |
+'return_state' |
+'return_country' |
+'payment_mode' |
+'cod_amount' |
+'shipping_mode' |
+'shipment_value' |
+'box_breadth' |
+'box_length' |
+'box_height' |
+'box_weight' |
+'box_weight_unit' |
+'item_description' |
+'ewaybill'
+> ;
 
 export interface ShipmentListFilters {
   identifier?: string;

@@ -1,7 +1,8 @@
 import { useMemo, useState } from 'react';
 import { useQuery } from '@tanstack/react-query';
 import { Link, useNavigate } from 'react-router-dom';
-import { Package, Plus, Eye, Pencil, XCircle, AlertTriangle, Truck, X } from 'lucide-react';
+import { Package, Plus, Eye, Pencil, XCircle, AlertTriangle, Truck, X, Download } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { shipmentsApi } from '@/api/shipments.api';
 import { SHIPMENT_STATUS_LIST, SHIPMENT_STATUS } from '@/constants/enums';
 import type { ShipmentStatus } from '@/constants/enums';
@@ -26,10 +27,30 @@ import { AssignDeliveryPartnerDialog } from './components/AssignDeliveryPartnerD
 import { BulkAssignDeliveryPartnerDialog } from './components/BulkAssignDeliveryPartnerDialog';
 import { NdrActionDialog } from './components/NdrActionDialog';
 import type { ShipmentWithDeliveryPartner } from '@/types/shipment.types';
+import generateShipmentLabel, { generateShipmentLabelPDFBase64 } from '@/templates/shipment_label.template';
 import { cn } from '@/utils/cn';
 import styles from './ShipmentsPage.module.css';
 
 type StatusFilter = ShipmentStatus | 'ALL';
+
+async function downloadShipmentLabel(shipment: ShipmentWithDeliveryPartner) {
+  try {
+    const html = generateShipmentLabel(shipment);
+    const base64 = await generateShipmentLabelPDFBase64(html);
+    const binary = atob(base64);
+    const bytes = Uint8Array.from(binary, (character) => character.charCodeAt(0));
+    const objectUrl = URL.createObjectURL(new Blob([bytes], { type: 'application/pdf' }));
+    const link = document.createElement('a');
+    link.href = objectUrl;
+    link.download = `${shipment.generated_id}-label.pdf`;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
+    window.setTimeout(() => URL.revokeObjectURL(objectUrl), 0);
+  } catch (error) {
+    toast.error(error instanceof Error ? error.message : 'Failed to download shipment label.');
+  }
+}
 
 export function ShipmentsPage() {
   const navigate = useNavigate();
@@ -195,6 +216,13 @@ export function ShipmentsPage() {
             label: 'View',
             icon: <Eye size={14} />,
             onClick: () => navigate(ROUTES.SHIPMENT_DETAIL(row.id)),
+          });
+        }
+        if (row.status === SHIPMENT_STATUS.MANIFESTED || row.status === SHIPMENT_STATUS.PICKUP_SCHEDULED) {
+          items.push({
+            label: 'Download Label',
+            icon: <Download size={14} />,
+            onClick: () => { void downloadShipmentLabel(row); },
           });
         }
         if (canUpdate && (row.status === SHIPMENT_STATUS.MANIFESTED || row.status === SHIPMENT_STATUS.OUT_FOR_DELIVERY)) {
