@@ -1,4 +1,3 @@
-import { useState } from 'react';
 import { useMutation, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
 import { shipmentsApi } from '@/api/shipments.api';
@@ -13,14 +12,12 @@ interface CancelShipmentDialogProps {
 
 export function CancelShipmentDialog({ shipment, onClose, onSuccess }: CancelShipmentDialogProps) {
   const queryClient = useQueryClient();
-  const [isOpen, setIsOpen] = useState(Boolean(shipment));
 
   const mutation = useMutation({
     mutationFn: (id: number) => shipmentsApi.cancel(id),
     onSuccess: () => {
       toast.success('Shipment cancelled successfully');
       queryClient.invalidateQueries({ queryKey: ['shipments'] });
-      setIsOpen(false);
       onSuccess();
     },
     onError: (error: Error) => {
@@ -32,11 +29,8 @@ export function CancelShipmentDialog({ shipment, onClose, onSuccess }: CancelShi
 
   return (
     <ConfirmDialog
-      isOpen={isOpen}
-      onClose={() => {
-        setIsOpen(false);
-        onClose();
-      }}
+      isOpen
+      onClose={onClose}
       onConfirm={() => mutation.mutate(shipment.id)}
       title="Cancel shipment?"
       message={`Are you sure you want to cancel shipment ${shipment.generated_id}? This action cannot be undone.`}
