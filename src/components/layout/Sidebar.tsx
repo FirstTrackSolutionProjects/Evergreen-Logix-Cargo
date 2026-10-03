@@ -70,7 +70,11 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
         onMouseLeave={() => setHovered(false)}
       >
         <div className={styles.brand}>
-          <span className={styles.brandMark} />
+          {expanded ? (
+            <img src="/Logo.png" alt="Evergreen Logix Cargo" className={styles.brandLogo} />
+          ) : (
+            <span className={styles.brandMark} />
+          )}
           {expanded && (
             <span className={styles.brandText}>
               Evergreen <span className={styles.brandAccent}>Logix</span>

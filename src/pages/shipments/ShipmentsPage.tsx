@@ -136,15 +136,17 @@ export function ShipmentsPage() {
     setSelectedIds([]);
   };
 
-  // Only allow selecting shipments that don't already have a delivery partner
-  const isRowSelectable = (row: ShipmentWithDeliveryPartner) =>
-    !row.dp_first_name &&
-    row.status !== SHIPMENT_STATUS.CANCELLED &&
-    row.status !== SHIPMENT_STATUS.DELIVERED;
   const handleDeliveryPartnerIdentifierChange = (value: string) => {
     setDeliveryPartnerIdentifier(value);
     setPage(1);
   };
+
+  // Only allow selecting shipments that are not yet in transit — a shipment can
+  // only be assigned to a delivery partner before it is picked up.
+  const isRowSelectable = (row: ShipmentWithDeliveryPartner) =>
+    !row.dp_first_name &&
+    (row.status === SHIPMENT_STATUS.MANIFESTED ||
+      row.status === SHIPMENT_STATUS.PICKUP_SCHEDULED);
 
   const columns: Column<ShipmentWithDeliveryPartner>[] = [
     {
@@ -225,14 +227,20 @@ export function ShipmentsPage() {
             onClick: () => { void downloadShipmentLabel(row); },
           });
         }
-        if (canUpdate && (row.status === SHIPMENT_STATUS.MANIFESTED || row.status === SHIPMENT_STATUS.OUT_FOR_DELIVERY)) {
+        // Editable only while MANIFESTED
+        if (canUpdate && row.status === SHIPMENT_STATUS.MANIFESTED) {
           items.push({
             label: 'Edit',
             icon: <Pencil size={14} />,
             onClick: () => navigate(ROUTES.SHIPMENT_EDIT(row.id)),
           });
         }
-        if (canAssign) {
+        // Assignable only before pickup (MANIFESTED / PICKUP SCHEDULED)
+        if (
+          canAssign &&
+          (row.status === SHIPMENT_STATUS.MANIFESTED ||
+            row.status === SHIPMENT_STATUS.PICKUP_SCHEDULED)
+        ) {
           items.push({
             label: 'Assign Partner',
             icon: <Truck size={14} />,

@@ -72,8 +72,8 @@ export function ShipmentDetailPage() {
     );
   }
 
-  const isUpdatable =
-    shipment.status === SHIPMENT_STATUS.MANIFESTED || shipment.status === SHIPMENT_STATUS.OUT_FOR_DELIVERY;
+  // Editable only while MANIFESTED
+  const isUpdatable = shipment.status === SHIPMENT_STATUS.MANIFESTED;
 
   return (
     <div className={styles.page}>

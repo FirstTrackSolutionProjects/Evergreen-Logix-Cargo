@@ -27,6 +27,17 @@
   position: relative;
 }
 
+.brandLogo {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  border-radius: var(--radius-sm);
+  background-color: #ffffff;
+  padding: 3px;
+  flex-shrink: 0;
+  display: block;
+}
+
 .brandMark {
   width: 10px;
   height: 28px;

@@ -44,7 +44,7 @@ export function LoginPage() {
     <div className={styles.page}>
       <div className={styles.brandPanel}>
         <div className={styles.brandContent}>
-          <div className={styles.brandMark} />
+          <img src="/Logo.png" alt="Evergreen Logix Cargo" className={styles.brandLogo} />
           <h1 className={styles.brandTitle}>
             Evergreen <span className={styles.brandAccent}>Logix Cargo</span>
           </h1>

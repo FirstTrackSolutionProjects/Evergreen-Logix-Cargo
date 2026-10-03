@@ -44,6 +44,18 @@
   animation: slideUp var(--transition-slow) ease-out;
 }
 
+.brandLogo {
+  width: 72px;
+  height: 72px;
+  object-fit: contain;
+  margin-bottom: 22px;
+  border-radius: var(--radius-md);
+  background-color: #ffffff;
+  padding: 8px;
+  box-shadow: 0 4px 20px rgba(16, 185, 129, 0.18);
+  display: block;
+}
+
 .brandMark {
   width: 14px;
   height: 40px;
