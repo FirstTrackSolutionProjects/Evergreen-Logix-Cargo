@@ -62,6 +62,11 @@ export interface ShipmentTrackingResponse {
   events: ShipmentTrackingEvent[];
 }
 
+export interface ShipmentPodResponse {
+  pod_doc_key: string;
+  url: string;
+}
+
 export interface CreateShipmentPayload {
   consignor_name: string;
   consignor_phone: string;

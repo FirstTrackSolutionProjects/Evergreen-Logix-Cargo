@@ -4,6 +4,7 @@ import type {
   Shipment,
   ShipmentWithDeliveryPartner,
   ShipmentTrackingResponse,
+  ShipmentPodResponse,
   CreateShipmentPayload,
   ShipmentListFilters,
   TakeNdrActionPayload,
@@ -45,5 +46,10 @@ export const shipmentsApi = {
   takeNdrAction: async (id: number | string, payload: TakeNdrActionPayload): Promise<BaseResponse> => {
     const { data } = await apiClient.post<BaseResponse>(`/admin/shipments/${id}/ndr-action`, payload);
     return data;
+  },
+
+  getPod: async (id: number | string): Promise<ShipmentPodResponse> => {
+    const { data } = await apiClient.get<DataResponse<ShipmentPodResponse>>(`/admin/shipments/${id}/pod`);
+    return data.data;
   },
 };
