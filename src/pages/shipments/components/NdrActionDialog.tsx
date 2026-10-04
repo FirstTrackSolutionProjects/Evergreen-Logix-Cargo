@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query';
 import { toast } from 'react-hot-toast';
 import { AlertTriangle } from 'lucide-react';
 import { shipmentsApi } from '@/api/shipments.api';
@@ -28,16 +28,23 @@ const REASON_LABELS: Record<string, string> = {
 
 export function NdrActionDialog({ shipment, onClose, onSuccess }: NdrActionDialogProps) {
   const queryClient = useQueryClient();
-  const [selectedReason, setSelectedReason] = useState<string>('');
   const [selectedAction, setSelectedAction] = useState<NdrAction | ''>('');
   const [address, setAddress] = useState('');
   const [city, setCity] = useState('');
   const [state, setState] = useState('');
   const [pincode, setPincode] = useState('');
 
+  // Fetch the reason the delivery partner already reported when raising the NDR.
+  const { data: ndrReport, isLoading: isLoadingReason } = useQuery({
+    queryKey: ['shipment', shipment?.id, 'ndr-report'],
+    queryFn: () => shipmentsApi.getNdrReport(shipment!.id),
+    enabled: Boolean(shipment),
+  });
+
+  const reportedReason = ndrReport?.reason ?? '';
+
   useEffect(() => {
     if (shipment) {
-      setSelectedReason('');
       setSelectedAction('');
       setAddress(shipment.consignee_address ?? '');
       setCity(shipment.consignee_city ?? '');
@@ -61,8 +68,8 @@ export function NdrActionDialog({ shipment, onClose, onSuccess }: NdrActionDialo
 
   if (!shipment) return null;
 
-  const availableActions = selectedReason
-    ? NDR_ACTIONS_FOR_REASON[selectedReason as keyof typeof NDR_ACTIONS_FOR_REASON]
+  const availableActions = reportedReason
+    ? NDR_ACTIONS_FOR_REASON[reportedReason as keyof typeof NDR_ACTIONS_FOR_REASON]
     : [];
 
   const requiresAddress = selectedAction === 'UPDATE ADDRESS';
@@ -114,25 +121,21 @@ export function NdrActionDialog({ shipment, onClose, onSuccess }: NdrActionDialo
         </div>
 
         <div className={styles.section}>
-          <h4 className={styles.sectionTitle}>NDR Reason</h4>
-          <div className={styles.reasonList}>
-            {Object.values(NDR_REASON).map((reason) => (
-              <button
-                key={reason}
-                type="button"
-                className={`${styles.reasonButton} ${selectedReason === reason ? styles.reasonActive : ''}`}
-                onClick={() => {
-                  setSelectedReason(reason);
-                  setSelectedAction('');
-                }}
-              >
-                {REASON_LABELS[reason]}
-              </button>
-            ))}
-          </div>
+          <h4 className={styles.sectionTitle}>NDR Reason (reported by delivery partner)</h4>
+          {isLoadingReason ? (
+            <div className={styles.center}>
+              <Spinner size="sm" />
+            </div>
+          ) : reportedReason ? (
+            <div className={`${styles.reasonButton} ${styles.reasonActive}`} style={{ cursor: 'default' }}>
+              {REASON_LABELS[reportedReason] ?? reportedReason}
+            </div>
+          ) : (
+            <p style={{ fontSize: 13, color: 'var(--color-text-muted)' }}>No reason recorded.</p>
+          )}
         </div>
 
-        {selectedReason && (
+        {reportedReason && (
           <div className={styles.section}>
             <h4 className={styles.sectionTitle}>Action</h4>
             <div className={styles.actionList}>
