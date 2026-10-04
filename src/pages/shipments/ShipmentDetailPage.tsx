@@ -12,6 +12,8 @@ import {
   Truck,
   Clock,
   XCircle,
+  Image as ImageIcon,
+  ExternalLink,
 } from 'lucide-react';
 import { shipmentsApi } from '@/api/shipments.api';
 import { PERMISSIONS } from '@/constants/permissions';
@@ -47,6 +49,15 @@ export function ShipmentDetailPage() {
     enabled: Boolean(id),
   });
 
+  const isDelivered = shipment?.status === SHIPMENT_STATUS.DELIVERED;
+
+  const { data: pod, isLoading: isPodLoading } = useQuery({
+    queryKey: ['shipment', id, 'pod'],
+    queryFn: () => shipmentsApi.getPod(id!),
+    enabled: Boolean(id) && isDelivered,
+    retry: false,
+  });
+
   if (isLoading) {
     return (
       <div className={styles.center}>
@@ -72,8 +83,8 @@ export function ShipmentDetailPage() {
     );
   }
 
-  const isUpdatable =
-    shipment.status === SHIPMENT_STATUS.MANIFESTED || shipment.status === SHIPMENT_STATUS.OUT_FOR_DELIVERY;
+  // Editable only while MANIFESTED
+  const isUpdatable = shipment.status === SHIPMENT_STATUS.MANIFESTED;
 
   return (
     <div className={styles.page}>
@@ -195,6 +206,51 @@ export function ShipmentDetailPage() {
               )}
             </div>
           </Card>
+
+          {isDelivered && (
+            <Card>
+              <CardHeader
+                title="Proof of Delivery"
+                subtitle="Photo captured by the delivery partner at the doorstep"
+                actions={
+                  pod && (
+                    <a href={pod.url} target="_blank" rel="noreferrer">
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        leftIcon={<ExternalLink size={14} />}
+                      >
+                        Open
+                      </Button>
+                    </a>
+                  )
+                }
+              />
+              {isPodLoading ? (
+                <div className={styles.podCenter}>
+                  <Spinner size="md" />
+                </div>
+              ) : pod ? (
+                <a
+                  href={pod.url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className={styles.podLink}
+                >
+                  <img
+                    src={pod.url}
+                    alt="Proof of delivery"
+                    className={styles.podImage}
+                  />
+                </a>
+              ) : (
+                <div className={styles.podEmpty}>
+                  <ImageIcon size={22} />
+                  <span>No proof of delivery available for this shipment.</span>
+                </div>
+              )}
+            </Card>
+          )}
         </div>
 
         <div className={styles.sideColumn}>

@@ -8,7 +8,7 @@ import { ArrowLeft, Save } from 'lucide-react';
 import { shipmentsApi } from '@/api/shipments.api';
 import { updateShipmentSchema } from '@/validations/shipment.validations';
 import type { UpdateShipmentFormValues } from '@/validations/shipment.validations';
-import { COUNTRY, PAYMENT_MODE, SHIPPING_MODE, BOX_WEIGHT_UNIT } from '@/constants/enums';
+import { COUNTRY, PAYMENT_MODE, SHIPPING_MODE, BOX_WEIGHT_UNIT, SHIPMENT_STATUS } from '@/constants/enums';
 import { ROUTES } from '@/constants/routes';
 import { PageHeader } from '@/components/layout/PageHeader';
 import { Button } from '@/components/ui/Button';
@@ -171,6 +171,24 @@ export function UpdateShipmentPage() {
       <EmptyState
         title="Shipment not found"
         description="This shipment may have been removed."
+      />
+    );
+  }
+
+  // Block editing for anything that is no longer MANIFESTED
+  if (shipment.status !== SHIPMENT_STATUS.MANIFESTED) {
+    return (
+      <EmptyState
+        title="Shipment cannot be edited"
+        description="Only shipments in MANIFESTED status can be modified."
+        action={
+          <Button
+            variant="outline"
+            onClick={() => navigate(ROUTES.SHIPMENT_DETAIL(id!))}
+          >
+            Back to Shipment
+          </Button>
+        }
       />
     );
   }

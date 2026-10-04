@@ -125,6 +125,45 @@
   word-break: break-word;
 }
 
+/* Proof of Delivery */
+.podCenter {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 0;
+}
+
+.podLink {
+  display: block;
+  border-radius: var(--radius-md);
+  overflow: hidden;
+  border: 1px solid var(--color-border);
+  transition: border-color var(--transition), box-shadow var(--transition);
+}
+
+.podLink:hover {
+  border-color: var(--color-primary);
+  box-shadow: var(--shadow-md);
+}
+
+.podImage {
+  display: block;
+  width: 100%;
+  max-height: 460px;
+  object-fit: cover;
+  background-color: var(--color-surface-2);
+}
+
+.podEmpty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+  padding: 40px 0;
+  color: var(--color-text-muted);
+  font-size: 13px;
+}
+
 /* Timeline */
 .timeline {
   display: flex;
