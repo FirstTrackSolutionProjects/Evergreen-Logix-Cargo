@@ -72,7 +72,7 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
         <div className={styles.brand}>
           <img src="/Logo.png" alt="Evergreen Logix Cargo" className={styles.brandLogo} />
           <span className={styles.brandText}>
-            Evergreen <span className={styles.brandAccent}>Logix</span>
+            Evergreen <span className={styles.brandAccent}>Cargo</span>
           </span>
           <button
             type="button"
