@@ -118,7 +118,7 @@ export function LoginPage() {
           </form>
 
           <p className={styles.footerNote}>
-            Protected by Evergreen Logix Cargo. All rights reserved.
+            © 2026 Evergreen Logix. Developed by First Track Solution Technologies. All rights reserved.
           </p>
         </div>
       </div>

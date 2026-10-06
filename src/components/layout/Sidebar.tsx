@@ -70,16 +70,10 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
         onMouseLeave={() => setHovered(false)}
       >
         <div className={styles.brand}>
-          {expanded ? (
-            <img src="/Logo.png" alt="Evergreen Logix Cargo" className={styles.brandLogo} />
-          ) : (
-            <span className={styles.brandMark} />
-          )}
-          {expanded && (
-            <span className={styles.brandText}>
-              Evergreen <span className={styles.brandAccent}>Logix</span>
-            </span>
-          )}
+          <img src="/Logo.png" alt="Evergreen Logix Cargo" className={styles.brandLogo} />
+          <span className={styles.brandText}>
+            Evergreen <span className={styles.brandAccent}>Logix</span>
+          </span>
           <button
             type="button"
             className={styles.mobileClose}
@@ -99,7 +93,7 @@ export function Sidebar({ mobileOpen, onMobileClose }: SidebarProps) {
               className={({ isActive }) => cn(styles.navItem, isActive && styles.active)}
             >
               <span className={styles.navIcon}>{item.icon}</span>
-              {expanded && <span className={styles.navLabel}>{item.label}</span>}
+              <span className={styles.navLabel}>{item.label}</span>
             </NavLink>
           ))}
         </nav>

@@ -47,10 +47,16 @@
 }
 
 .brandText {
+  display: none;
   font-size: 15px;
   font-weight: 700;
   color: #ffffff;
   white-space: nowrap;
+}
+
+.expanded .brandText,
+.mobileOpen .brandText {
+  display: inline;
 }
 
 .brandAccent {
@@ -118,8 +124,14 @@
 }
 
 .navLabel {
+  display: none;
   overflow: hidden;
   text-overflow: ellipsis;
+}
+
+.expanded .navLabel,
+.mobileOpen .navLabel {
+  display: inline;
 }
 
 .footer {
