@@ -52,4 +52,9 @@ export const shipmentsApi = {
     const { data } = await apiClient.get<DataResponse<ShipmentPodResponse>>(`/admin/shipments/${id}/pod`);
     return data.data;
   },
+
+  getNdrReport: async (id: number | string): Promise<{ reason: string }> => {
+    const { data } = await apiClient.get<DataResponse<{ reason: string }>>(`/admin/shipments/${id}/ndr-report`);
+    return data.data;
+  },
 };
