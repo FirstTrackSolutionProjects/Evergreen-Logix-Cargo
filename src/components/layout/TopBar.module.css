@@ -182,3 +182,33 @@
     display: none;
   }
 }
+
+/* ── Main-site link ──────────────────────────────────────────────── */
+.websiteLink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 12px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--color-text-muted);
+  border-radius: var(--radius-full);
+  border: 1px solid transparent;
+  transition: all var(--transition);
+}
+
+.websiteLink:hover {
+  color: var(--color-primary-dark);
+  background-color: var(--color-primary-subtle);
+  border-color: var(--color-success-border);
+}
+
+@media (max-width: 720px) {
+  .websiteLinkLabel {
+    display: none;
+  }
+
+  .websiteLink {
+    padding: 7px;
+  }
+}

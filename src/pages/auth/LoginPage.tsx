@@ -1,3 +1,4 @@
+// src/pages/auth/LoginPage.tsx
 import { useState } from 'react';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -9,6 +10,8 @@ import { loginSchema } from '@/validations/auth.validations';
 import type { LoginFormValues } from '@/validations/auth.validations';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { ApkDownloadPanel } from '@/components/ui/ApkDownloadPanel';
+import { MAIN_WEBSITE_URL } from '@/constants/links';
 import { ROUTES } from '@/constants/routes';
 import styles from './LoginPage.module.css';
 
@@ -42,12 +45,23 @@ export function LoginPage() {
 
   return (
     <div className={styles.page}>
+      {/* ── Floating APK download button (top-right, hover to expand) ── */}
+      <ApkDownloadPanel variant="floating" />
+
       <div className={styles.brandPanel}>
         <div className={styles.brandContent}>
-          <img src="/Logo.png" alt="Evergreen Logix Cargo" className={styles.brandLogo} />
-          <h1 className={styles.brandTitle}>
-            Evergreen <span className={styles.brandAccent}>Logix Cargo</span>
-          </h1>
+          <a
+            href={MAIN_WEBSITE_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.brandLink}
+            aria-label="Visit the Evergreen Logix website"
+          >
+            <img src="/Logo.png" alt="Evergreen Logix Cargo" className={styles.brandLogo} />
+            <h1 className={styles.brandTitle}>
+              Evergreen <span className={styles.brandAccent}>Logix Cargo</span>
+            </h1>
+          </a>
           <p className={styles.brandTagline}>
             Manage your courier operations — shipments, delivery partners, and logistics in one place.
           </p>
