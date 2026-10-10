@@ -49,7 +49,9 @@ export function ShipmentDetailPage() {
     enabled: Boolean(id),
   });
 
-  const isDelivered = shipment?.status === SHIPMENT_STATUS.DELIVERED;
+  const isDelivered =
+    shipment?.status === SHIPMENT_STATUS.DELIVERED ||
+    shipment?.status === SHIPMENT_STATUS.RTO_DELIVERED;
 
   const { data: pod, isLoading: isPodLoading } = useQuery({
     queryKey: ['shipment', id, 'pod'],
@@ -210,8 +212,8 @@ export function ShipmentDetailPage() {
           {isDelivered && (
             <Card>
               <CardHeader
-                title="Proof of Delivery"
-                subtitle="Photo captured by the delivery partner at the doorstep"
+                title={shipment.status === SHIPMENT_STATUS.RTO_DELIVERED ? 'Proof of Return (RTO POD)' : 'Proof of Delivery'}
+                subtitle={shipment.status === SHIPMENT_STATUS.RTO_DELIVERED ? 'Photo captured upon returning the parcel to origin' : 'Photo captured by the delivery partner at the doorstep'}
                 actions={
                   pod && (
                     <a href={pod.url} target="_blank" rel="noreferrer">
