@@ -285,84 +285,84 @@ export const createShipmentSchema = z
         return 'Invalid return same as pickup';
       },
     }),
-    billing_same_as_pickup: z.boolean({
-      error: (issue) => {
-        if (issue.input === undefined) return 'Billing same as pickup is required';
-        if (issue.code === 'invalid_type') return 'Billing same as pickup must be a boolean';
-        return 'Invalid billing same as pickup';
-      },
-    }),
-    billing_address: z
-      .string({
-        error: (issue) => {
-          if (issue.input === undefined) return 'Billing address is required';
-          if (issue.code === 'invalid_type') return 'Billing address must be a string';
-          return 'Invalid billing address';
-        },
-      })
-      .trim()
-      .min(10, 'Billing address must be at least 10 characters long')
-      .max(200, 'Billing address cannot be longer than 200 characters')
-      .optional()
-      .or(z.literal('')),
-    billing_pincode: z
-      .string({
-        error: (issue) => {
-          if (issue.input === undefined) return 'Billing pincode is required';
-          if (issue.code === 'invalid_type') return 'Billing pincode must be a string';
-          return 'Invalid billing pincode';
-        },
-      })
-      .length(6, 'Billing pincode must be 6 digits long')
-      .regex(pincodeRegex, 'Billing pincode must be a 6 digit number')
-      .optional()
-      .or(z.literal('')),
-    billing_city: z
-      .string({
-        error: (issue) => {
-          if (issue.input === undefined) return 'Billing city is required';
-          if (issue.code === 'invalid_type') return 'Billing city must be a string';
-          return 'Invalid billing city';
-        },
-      })
-      .trim()
-      .min(2, 'Billing city must be at least 2 characters long')
-      .max(50, 'Billing city cannot be longer than 50 characters')
-      .optional()
-      .or(z.literal('')),
-    billing_state: z
-      .string({
-        error: (issue) => {
-          if (issue.input === undefined) return 'Billing state is required';
-          if (issue.code === 'invalid_type') return 'Billing state must be a string';
-          return 'Invalid billing state';
-        },
-      })
-      .trim()
-      .min(2, 'Billing state must be at least 2 characters long')
-      .max(50, 'Billing state cannot be longer than 50 characters')
-      .optional()
-      .or(z.literal('')),
-    billing_country: z
-      .string({
-        error: (issue) => {
-          if (issue.input === undefined) return 'Billing country is required';
-          if (issue.code === 'invalid_type') return 'Billing country must be a string';
-          return 'Invalid billing country';
-        },
-      })
-      .trim()
-      .pipe(
-        z.enum([COUNTRY.INDIA], {
-          error: (issue) => {
-            if (issue.code === 'invalid_value') {
-              return `Supported countries are: ${COUNTRY.INDIA}`;
-            }
-          },
-        }),
-      )
-      .optional()
-      .or(z.literal('')),
+    // billing_same_as_pickup: z.boolean({
+    //   error: (issue) => {
+    //     if (issue.input === undefined) return 'Billing same as pickup is required';
+    //     if (issue.code === 'invalid_type') return 'Billing same as pickup must be a boolean';
+    //     return 'Invalid billing same as pickup';
+    //   },
+    // }),
+    // billing_address: z
+    //   .string({
+    //     error: (issue) => {
+    //       if (issue.input === undefined) return 'Billing address is required';
+    //       if (issue.code === 'invalid_type') return 'Billing address must be a string';
+    //       return 'Invalid billing address';
+    //     },
+    //   })
+    //   .trim()
+    //   .min(10, 'Billing address must be at least 10 characters long')
+    //   .max(200, 'Billing address cannot be longer than 200 characters')
+    //   .optional()
+    //   .or(z.literal('')),
+    // billing_pincode: z
+    //   .string({
+    //     error: (issue) => {
+    //       if (issue.input === undefined) return 'Billing pincode is required';
+    //       if (issue.code === 'invalid_type') return 'Billing pincode must be a string';
+    //       return 'Invalid billing pincode';
+    //     },
+    //   })
+    //   .length(6, 'Billing pincode must be 6 digits long')
+    //   .regex(pincodeRegex, 'Billing pincode must be a 6 digit number')
+    //   .optional()
+    //   .or(z.literal('')),
+    // billing_city: z
+    //   .string({
+    //     error: (issue) => {
+    //       if (issue.input === undefined) return 'Billing city is required';
+    //       if (issue.code === 'invalid_type') return 'Billing city must be a string';
+    //       return 'Invalid billing city';
+    //     },
+    //   })
+    //   .trim()
+    //   .min(2, 'Billing city must be at least 2 characters long')
+    //   .max(50, 'Billing city cannot be longer than 50 characters')
+    //   .optional()
+    //   .or(z.literal('')),
+    // billing_state: z
+    //   .string({
+    //     error: (issue) => {
+    //       if (issue.input === undefined) return 'Billing state is required';
+    //       if (issue.code === 'invalid_type') return 'Billing state must be a string';
+    //       return 'Invalid billing state';
+    //     },
+    //   })
+    //   .trim()
+    //   .min(2, 'Billing state must be at least 2 characters long')
+    //   .max(50, 'Billing state cannot be longer than 50 characters')
+    //   .optional()
+    //   .or(z.literal('')),
+    // billing_country: z
+    //   .string({
+    //     error: (issue) => {
+    //       if (issue.input === undefined) return 'Billing country is required';
+    //       if (issue.code === 'invalid_type') return 'Billing country must be a string';
+    //       return 'Invalid billing country';
+    //     },
+    //   })
+    //   .trim()
+    //   .pipe(
+    //     z.enum([COUNTRY.INDIA], {
+    //       error: (issue) => {
+    //         if (issue.code === 'invalid_value') {
+    //           return `Supported countries are: ${COUNTRY.INDIA}`;
+    //         }
+    //       },
+    //     }),
+    //   )
+    //   .optional()
+    //   .or(z.literal('')),
     payment_mode: z
       .string({
         error: (issue) => {
@@ -596,43 +596,43 @@ export const createShipmentSchema = z
     }
 
     // Billing address
-    if (!data.billing_same_as_pickup) {
-      if (!data.billing_address) {
-        ctx.addIssue({
-          code: 'custom',
-          path: ['billing_address'],
-          message: 'Billing address is required',
-        });
-      }
-      if (!data.billing_pincode) {
-        ctx.addIssue({
-          code: 'custom',
-          path: ['billing_pincode'],
-          message: 'Billing pincode is required',
-        });
-      }
-      if (!data.billing_city) {
-        ctx.addIssue({
-          code: 'custom',
-          path: ['billing_city'],
-          message: 'Billing city is required',
-        });
-      }
-      if (!data.billing_state) {
-        ctx.addIssue({
-          code: 'custom',
-          path: ['billing_state'],
-          message: 'Billing state is required',
-        });
-      }
-      if (!data.billing_country) {
-        ctx.addIssue({
-          code: 'custom',
-          path: ['billing_country'],
-          message: 'Billing country is required',
-        });
-      }
-    }
+    // if (!data.billing_same_as_pickup) {
+    //   if (!data.billing_address) {
+    //     ctx.addIssue({
+    //       code: 'custom',
+    //       path: ['billing_address'],
+    //       message: 'Billing address is required',
+    //     });
+    //   }
+    //   if (!data.billing_pincode) {
+    //     ctx.addIssue({
+    //       code: 'custom',
+    //       path: ['billing_pincode'],
+    //       message: 'Billing pincode is required',
+    //     });
+    //   }
+    //   if (!data.billing_city) {
+    //     ctx.addIssue({
+    //       code: 'custom',
+    //       path: ['billing_city'],
+    //       message: 'Billing city is required',
+    //     });
+    //   }
+    //   if (!data.billing_state) {
+    //     ctx.addIssue({
+    //       code: 'custom',
+    //       path: ['billing_state'],
+    //       message: 'Billing state is required',
+    //     });
+    //   }
+    //   if (!data.billing_country) {
+    //     ctx.addIssue({
+    //       code: 'custom',
+    //       path: ['billing_country'],
+    //       message: 'Billing country is required',
+    //     });
+    //   }
+    // }
   });
 
 export type CreateShipmentFormValues = z.infer<typeof createShipmentSchema>;

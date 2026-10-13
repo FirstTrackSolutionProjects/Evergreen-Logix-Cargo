@@ -18,7 +18,7 @@ import {
   ConsignorSection,
   ConsigneeSection,
   ReturnAddressSection,
-  BillingSection,
+  // BillingSection,
   PackageSection,
 } from './components/ShipmentFormSections';
 import styles from './ShipmentFormPage.module.css';
@@ -66,12 +66,12 @@ export function UpdateShipmentPage() {
       consignee_state: '',
       consignee_country: COUNTRY.INDIA,
       return_same_as_pickup: true,
-      billing_same_as_pickup: true,
-      billing_address: '',
-      billing_pincode: '',
-      billing_city: '',
-      billing_state: '',
-      billing_country: COUNTRY.INDIA,
+      // billing_same_as_pickup: true,
+      // billing_address: '',
+      // billing_pincode: '',
+      // billing_city: '',
+      // billing_state: '',
+      // billing_country: COUNTRY.INDIA,
       payment_mode: PAYMENT_MODE.PREPAID,
       shipping_mode: SHIPPING_MODE.SURFACE,
       cod_amount: 0,
@@ -111,12 +111,12 @@ export function UpdateShipmentPage() {
         consignee_state: shipment.consignee_state,
         consignee_country: COUNTRY.INDIA,
         return_same_as_pickup: shipment.return_same_as_pickup,
-        billing_same_as_pickup: true,
-        billing_address: '',
-        billing_pincode: '',
-        billing_city: '',
-        billing_state: '',
-        billing_country: COUNTRY.INDIA,
+        // billing_same_as_pickup: true,
+        // billing_address: '',
+        // billing_pincode: '',
+        // billing_city: '',
+        // billing_state: '',
+        // billing_country: COUNTRY.INDIA,
         payment_mode: shipment.payment_mode,
         shipping_mode: SHIPPING_MODE.SURFACE,
         cod_amount: Number(shipment.cod_amount),
@@ -133,7 +133,7 @@ export function UpdateShipmentPage() {
   }, [shipment, reset]);
 
   const returnSame = watch('return_same_as_pickup');
-  const billingSame = watch('billing_same_as_pickup');
+  // const billingSame = watch('billing_same_as_pickup');
   const paymentMode = watch('payment_mode');
 
   const mutation = useMutation({
@@ -224,7 +224,7 @@ export function UpdateShipmentPage() {
         <ConsignorSection register={register} errors={errors} />
         <ConsigneeSection register={register} errors={errors} />
         <ReturnAddressSection register={register} errors={errors} sameAsPickup={returnSame} />
-        <BillingSection register={register} errors={errors} sameAsPickup={billingSame} />
+        {/* <BillingSection register={register} errors={errors} sameAsPickup={billingSame} /> */}
         <PackageSection register={register} errors={errors} paymentMode={paymentMode} />
       </div>
 
